@@ -19,11 +19,7 @@
       "distributionCountries": []
     },
     "apis": {
-      "custom": {
-        "endpoint": {
-          "uri": "arn:aws:lambda:us-east-1:623357820778:function:ask-alexaSkillDemoRamenTimer-de-AlexaSkillFunction-M55IVKESM7W4"
-        }
-      }
+      "custom": {}
     },
     "manifestVersion": "1.0",
     "permissions": [
