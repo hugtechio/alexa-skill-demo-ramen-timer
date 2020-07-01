@@ -81,7 +81,7 @@ const LaunchRequest = {
   async handle(handlerInput) {
     // Timer を使うには ユーザーの許可が必要。有効になってなければ声で促す
     const directive = timer.verifyConsentToken(handlerInput)
-    if (directive) return talk.launch(handler.response, storage, timerAskDirective)
+    if (directive) return talk.launch(handlerInput.responseBuilder, storage, directive)
 
     return talk.launch(handlerInput.responseBuilder, storage)
   },

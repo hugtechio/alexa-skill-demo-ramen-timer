@@ -19,7 +19,7 @@ const response = (builder, data, directive = null) => {
 module.exports = {
     launch: (responseBuilder, storage, timerAskDirective = null) => {
         if (timerAskDirective) {
-            return responseBuilder(responseBuilder,{
+            return response(responseBuilder,{
                 speak: '',
                 reprompt: '',
                 shouldEndSession: false,
