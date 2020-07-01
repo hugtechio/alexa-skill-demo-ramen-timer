@@ -155,7 +155,7 @@ const SetNoodleTimerIntent = {
     )
 
     console.log(noodle, softy, minutes)
-    sessionAttributesOrError = await timer.runTimer(
+    const sessionAttributesOrError = await timer.runTimer(
       handlerInput, 
       noodle, (minutes) ? minutes : softy)
     
