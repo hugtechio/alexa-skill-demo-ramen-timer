@@ -22,7 +22,7 @@ const getAlexaDuration = (noodleName, softyOrMinutes) => {
     const extra = parseInt(softyOrMinutes)
     const duration = (isNaN(extra))
         ? timerConfig.noodle[noodleName] + timerConfig.softy[softyOrMinutes]
-        : timerConfig.noodle[noodleName] + extra
+        : extra
     const durationString = `PT${duration}M`
     console.log('Duration:', durationString)
     return durationString
