@@ -1,0 +1,35 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "ja-JP": {
+          "summary": "カップ麺タイマー",
+          "examplePhrases": [
+            "アレクサ、カップ麺タイマーを起動して",
+            "アレクサ、カップ麺タイマーを起動して、どん兵衛を５分ね",
+            "アレクサ、カップ麺タイマーを起動して、ラ王をバリカタで"
+          ],
+          "name": "カップ麺タイマー",
+          "description": "カップ麺の時間を測るスキルです。"
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Sample Testing Instructions.",
+      "category": "CALCULATORS",
+      "distributionCountries": []
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "arn:aws:lambda:us-east-1:623357820778:function:ask-alexaSkillDemoRamenTimer-de-AlexaSkillFunction-M55IVKESM7W4"
+        }
+      }
+    },
+    "manifestVersion": "1.0",
+    "permissions": [
+      {
+        "name": "alexa::alerts:timers:skill:readwrite"
+      }
+    ]
+  }
+}

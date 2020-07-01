@@ -1,0 +1,114 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "カップ麺タイマー",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "SetNoodleTimerIntent",
+                    "slots": [
+                        {
+                            "name": "noodle",
+                            "type": "LIST_OF_NOODLES"
+                        },
+                        {
+                            "name": "softy",
+                            "type": "LIST_OF_SOFTY"
+                        },
+                        {
+                            "name": "minutes",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "{noodle} を {softy} でお願い",
+                        "{noodle} を {minutes} 分 でお願い",
+                        "{noodle} を {minutes} 分",
+                        "{noodle} を {softy}",
+                        "{noodle} を {softy} で",
+                        "{noodle} を {softy} {minutes} 分 でお願い",
+                        "{noodle} を {softy} {minutes} 分 でお願いします",
+                        "{noodle} を {softy} がいいです",
+                        "{noodle} が {softy} で食べたいです",
+                        "{noodle} を {minutes} 分 まちます",
+                        "{noodle} {softy}",
+                        "{noodle} は {softy} が好きです",
+                        "{noodle} を {minutes} 分ね",
+                        "{noodle} を {softy} に"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                }
+            ],
+            "types": [
+                {
+                    "name": "LIST_OF_NOODLES",
+                    "values": [
+                        {
+                            "id": "DON-BEI",
+                            "name": {
+                                "value": "どん兵衛",
+                                "synonyms": [
+                                    "どんべい",
+                                    "どんべえ"
+                                ]
+                            }
+                        },
+                        {
+                            "id": "RA-OU",
+                            "name": {
+                                "value": "ラ王",
+                                "synonyms": [
+                                    "らおう",
+                                    "ラオウ"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "LIST_OF_SOFTY",
+                    "values": [
+                        {
+                            "id": "KATAME",
+                            "name": {
+                                "value": "かため",
+                                "synonyms": [
+                                    "固め",
+                                    "かたい",
+                                    "かたいくらい"
+                                ]
+                            }
+
+                        },
+                        {
+                            "id": "YAWARAKAME",
+                            "name": {
+                                "value": "やわらかめ",
+                                "synonyms": [
+                                    "やわ",
+                                    "やわらかい",
+                                    "やわらかめ"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+  }
+  
