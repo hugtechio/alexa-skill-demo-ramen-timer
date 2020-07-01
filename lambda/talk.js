@@ -1,10 +1,10 @@
 const timer = require("./timer")
 
 // レスポンス組み立て
-const response = (builder, data, directive = null) => {
-    if (directive) {
+const response = (builder, data) => {
+    if (data.directive) {
         // directive 返す時は他の要素はレスポンスに足してはいけない
-        builder = builder.addDirective(directive)
+        builder = builder.addDirective(data.directive)
     } else {
         builder = builder
             .speak(data.speak)
