@@ -1,9 +1,12 @@
+const AWS = require('aws-sdk');
 const Alexa = require('ask-sdk');
 const ddbAdapter = require('ask-sdk-dynamodb-persistence-adapter');
+const s3Adapter = require('ask-sdk-s3-persistence-adapter');
 const talk = require('./talk')
 const timer = require('./timer')
 
 let storage = null
+let session = {}
 
 // Synonym で定義したidをキーとして扱いたいので、slotの構造から直接取る。
 function getSynonymValues(handlerInput, key) {
@@ -51,11 +54,18 @@ const ResponseInterceptor = {
   }
 };
 
-function getPersistenceAdapter(tableName) {
-  return new ddbAdapter.DynamoDbPersistenceAdapter({
-    tableName: tableName,
-    createTable: true
-  });
+function getPersistenceAdapter(type, param = null) {
+  const generator = {
+    dynamodb: (tableName) => new ddbAdapter.DynamoDbPersistenceAdapter({
+      tableName: tableName,
+      createTable: true
+    }),
+    s3: (name=null) => new s3Adapter.S3PersistenceAdapter({
+      bucketName: process.env.S3_PERSISTENCE_BUCKET,
+      s3Client: new AWS.S3({apiVersion: 'latest', region: process.env.S3_PERSISTENCE_REGION})
+    })
+  }
+  return generator[type](param)
 }
 
 const LaunchRequest = {
@@ -173,7 +183,7 @@ const FallbackHandler = {
 
 const skillBuilder = Alexa.SkillBuilders.custom();
 exports.handler = skillBuilder
-  .withPersistenceAdapter(getPersistenceAdapter('AlexaSkillDemoRamenTimer'))
+  .withPersistenceAdapter(getPersistenceAdapter('s3', 'AlexaSkillDemoRamenTimer'))
   .addRequestHandlers(
     LaunchRequest,
     ExitHandler,

@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "ask-sdk": "^2.8.0",
+    "ask-sdk-s3-persistence-adapter": "^2.8.0",
     "aws-sdk": "^2.326.0"
   }
 }

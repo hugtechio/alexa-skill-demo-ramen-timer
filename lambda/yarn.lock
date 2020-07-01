@@ -26,6 +26,13 @@ ask-sdk-runtime@^2.8.0:
   resolved "https://registry.yarnpkg.com/ask-sdk-runtime/-/ask-sdk-runtime-2.8.0.tgz#a958faad9de9c10b67d469900129dda81347cac2"
   integrity sha512-hsVDcFKcbuj2H7MuAUlW0RBCTF8QOXfVCsrWSIgV2ABi8+PyI0zGUe8TdkQOGsPrDAv1PIzOS42QYqxWwPsp2g==
 
+ask-sdk-s3-persistence-adapter@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/ask-sdk-s3-persistence-adapter/-/ask-sdk-s3-persistence-adapter-2.8.0.tgz#4d38404ead671953164daa1f1ef6a0f4a23d41d3"
+  integrity sha512-QgL2qigwvkh7Vs3l3rF9zEWKe4m43Pbh5xiVuI7m3Lu3lMAG+lkH8FBX99OEC1ZNA6oAzUz6iqqgnp+ZjG1tww==
+  dependencies:
+    aws-sdk "^2.163.0"
+
 ask-sdk@^2.8.0:
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/ask-sdk/-/ask-sdk-2.8.0.tgz#0f5c9f909a831fbe1ffe916015707bded0ab7e5b"
