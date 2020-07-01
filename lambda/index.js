@@ -8,7 +8,7 @@ const timer = require('./timer')
 let storage = null
 let session = {}
 
-// Synonym で定義したidをキーとして扱いたいので、slotの構造から直接取る。
+// Synonym で定義したnameをキーとして扱いたいので、slotの構造から直接取る。
 function getSynonymValues(handlerInput, key) {
   try{
     const slot = Alexa.getSlot(handlerInput.requestEnvelope, key)
@@ -16,6 +16,7 @@ function getSynonymValues(handlerInput, key) {
     if (resolutions) {
       return resolutions.resolutionsPerAuthority[0].values[0].value.name.toLowerCase()
     } else {
+      // AMAZON.NUMBER は Synonym の resolutions プロパティがないので、value を直接取る
       return slot.value
     }
   } catch (e) {
@@ -24,8 +25,12 @@ function getSynonymValues(handlerInput, key) {
   }
 }
 
-// PersistentAttributesとSessionAttributesはHandlerが処理される前に必ずあるようにしたいので、
-// Interceptor に実装
+
+
+/**
+ * PersistentAttributes と SessionAttributes は Handler が処理される前に必ず存在するようにしたいので、
+ * Interceptor に実装
+ */
 const RequestInterceptor = {
   async process(handlerInput) {
     console.log(handlerInput.requestEnvelope.request.intent)
@@ -50,7 +55,9 @@ const RequestInterceptor = {
   }
 };
 
-// Attributesの保存は、handlerが呼ばれたあとの共通処理で実装(=ResponseInterceptorss)
+/**
+ * Attributesの保存は、handler が呼ばれたあとの共通処理で実装
+ */
 const ResponseInterceptor = {
   async process(handlerInput) {
     storage.visit = "1"
@@ -60,6 +67,11 @@ const ResponseInterceptor = {
   }
 };
 
+/**
+ * DynamoDB、S3　どっちでも選べるように実装
+ * @param {} type 
+ * @param {*} param 
+ */
 function getPersistenceAdapter(type, param = null) {
   const generator = {
     dynamodb: (tableName) => new ddbAdapter.DynamoDbPersistenceAdapter({
@@ -79,7 +91,7 @@ const LaunchRequest = {
     return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
   },
   async handle(handlerInput) {
-    // Timer を使うには ユーザーの許可が必要。有効になってなければ声で促す
+    // Timer を使うには ユーザーの許可が必要。有効になってなければ聞く
     const directive = timer.verifyConsentToken(handlerInput)
     console.log(directive)
     if (directive) return talk.launch(handlerInput.responseBuilder, storage, directive)
@@ -88,6 +100,9 @@ const LaunchRequest = {
   },
 };
 
+/**
+ * Timer の Permission を聞いたときの応答
+ */
 const AskForResponseHandler = {
   canHandle(handlerInput) {
       return Alexa.getRequestType(handlerInput.requestEnvelope) === 'Connections.Response'
@@ -138,6 +153,10 @@ const UnhandledIntent = {
   },
 };
 
+/**
+ * タイマーセット用のインテント
+ * noodle(カップ麺), softy(硬さ) or minutes(待ち時間) をSlotから取る
+ */
 const SetNoodleTimerIntent = {
   canHandle(handlerInput) {
     return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest' 

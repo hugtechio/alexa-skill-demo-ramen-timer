@@ -1,6 +1,9 @@
 
 const TIMERS_PERMISSION = 'alexa::alerts:timers:skill:readwrite'
 
+/**
+ * Slot と Timer セット 時間のマップテーブル（単位：分）
+ */
 const timerConfig = {
     noodle: {
         'ラ王': 3,
@@ -36,6 +39,11 @@ const message = {
     }
 }
 
+/**
+ * タイマー起動のリクエストパラメーターを作成
+ * @param {} noodle 
+ * @param {*} softyOrMinutes 
+ */
 const getTimerTemplate = (noodle, softyOrMinutes) => {
     return {
         duration: getAlexaDuration(noodle, softyOrMinutes),
@@ -102,11 +110,16 @@ module.exports = {
             isCardThrown: payload.isCardThrown
         }
     },
+    /**
+     * Timer を起動する。起動したタイマーの状態を SessionAttributes に渡して、レスポンス時に利用
+     */
     runTimer: async (handlerInput, noodle, softy) => {
         const {attributesManager, serviceClientFactory} = handlerInput;
     
         try {
+            /** timerAPIClient を Factory から作る。serviceClientFactory.getTimerManagementServiceClient() */
             const timerServiceClient = serviceClientFactory.getTimerManagementServiceClient();
+            /** timer作る。createTimer 関数*/
             const timerResponse = await timerServiceClient.createTimer(
                 getTimerTemplate(noodle, softy)
             )
@@ -115,10 +128,13 @@ module.exports = {
             const timerStatus = timerResponse.status;
             console.log(timerResponse)
 
+            /** 作った Timer の情報を sessionAttributes に保存 */
             const sessionAttributes = attributesManager.getSessionAttributes();
             sessionAttributes['lastTimerId'] = timerId
             sessionAttributes['noodle'] = noodle
             sessionAttributes['softy'] = softy
+
+            /** Timer の作成が成功(timerResponse.status === ON)していたら、 */
             if(timerStatus === 'ON') {
                 sessionAttributes['lastTimerStatus'] = timerStatus
                 return sessionAttributes

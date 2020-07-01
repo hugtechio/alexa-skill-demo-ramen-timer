@@ -1,6 +1,10 @@
 const timer = require("./timer")
 
-// レスポンス組み立て
+/**
+ * レスポンス組み立て
+ * @param {*} builder 
+ * @param {*} data 
+ */
 const response = (builder, data) => {
     if (data.directive) {
         // directive 返す時は他の要素はレスポンスに足してはいけない
@@ -14,8 +18,10 @@ const response = (builder, data) => {
     return builder.getResponse()
 }
 
-// インテントと対になるように設計。第２引数のパラメータを必要なら使ってメッセージを組み立てる。
-// Keyの値は、Alexaのキーワードにできるだけ揃ておくと、キーワードの余計な判断や置換が減ってよい。
+/**
+ * インテントに対応するレスポンスビルダー
+ * インテントと１対１になるよう設計。第２引数のパラメータを必要なら使ってメッセージを組み立てる。
+ */
 module.exports = {
     launch: (responseBuilder, storage, timerAskDirective = null) => {
         if (timerAskDirective) {
@@ -51,6 +57,7 @@ module.exports = {
         }
 
         const talkMap = {
+            // Timer が 有効になったとき
             ACCEPTED: (permission) => {
                 return {
                     speak: 'タイマーを有効にしました。今日のカップ麺楽しんでください。',
@@ -58,6 +65,7 @@ module.exports = {
                     shouldEndSession: false
                 }
             },
+            // Timer を 有効にしてくれなかった 
             DENIED: (permission) => {
                 if (permission.isCardThrown) {
                     return permissionCard
@@ -68,6 +76,7 @@ module.exports = {
                     shouldEndSession: true
                 }
             },
+            // 答えがない
             NOT_ANSWERED: (permission) => {
                 if (permission.isCardThrown) {
                     return permissionCard
@@ -79,6 +88,7 @@ module.exports = {
                 }
             }
         }
+        // skill manifest で 有効にしてない
         if (permission.code === '400') {
             console.log('You forgot to specify the permission in the skill manifest!')
         }
