@@ -26,7 +26,10 @@ const getAlexaDuration = (noodleName, softyOrMinutes) => {
     const duration = (isNaN(extra))
         ? timerConfig.noodle[noodleName] + timerConfig.softy[softyOrMinutes]
         : extra
-    const durationString = `PT${duration}M`
+    // [課題4-4]
+    // duration には 数値が入っています。単位は分(=M)で設定してください
+    // https://ja.wikipedia.org/wiki/ISO_8601#%E7%B6%99%E7%B6%9A%E6%99%82%E9%96%93
+    const durationString = // <<Not implemented>> [課題4-4] 
     console.log('Duration:', durationString)
     return durationString
 }
@@ -46,23 +49,32 @@ const message = {
  */
 const getTimerTemplate = (noodle, softyOrMinutes) => {
     return {
+        // [課題4] タイマー起動のリクエスト作成
+        // タイマーを起動するパラメーターを作成してください。
+        // https://developer.amazon.com/ja-JP/docs/alexa/smapi/alexa-timers-api-reference.html#create-a-timer
+        // 設定するパラメータは以下です。
+        //
+        // やること
+        // 1. creationBehavior.displayExperience.visibility = 'VISIBLE'
+        // 2. operation type: 'ANNOUNCE' --> タイマーが発火したときに一言言う。
+        // 3. notificationConfig.playAudible = true --> 動作中のタイマーはスキルから抜けても操作できるように
+        // 4. getAlexaDuration 関数を編集して、適切なISO8601文字列が返却されるようにしてください
+        // 
         duration: getAlexaDuration(noodle, softyOrMinutes),
         label: message.label(noodle, softyOrMinutes),
         creationBehavior: {
-            displayExperience: {
-                visibility: 'VISIBLE'
-            }
+            // <<Not implemented>>[課題4-1]
         },
         triggeringBehavior: {
             operation: {
-                type : 'ANNOUNCE',
+                // <<Not implemented>>[課題4-2]
                 textToAnnounce: [{
                     locale: 'ja-JP',
                     text: message.done(noodle)
                 }]
             },
             notificationConfig: {
-                playAudible: true
+                // <<Not implemented]>>[課題4-3]
             }
         }
     }
@@ -80,15 +92,11 @@ module.exports = {
         const {permissions} = requestEnvelope.context.System.user;
         if (!(permissions && permissions.consentToken)){
             console.log('No permissions found!');
+            // [課題1-3] ユーザーへ Timer API 利用のリクエストパラメータを構築する
+            // https://developer.amazon.com/ja-JP/docs/alexa/smapi/voice-permissions-for-timers.html#send-a-connectionssendrequest-directive
             return {
-                type: 'Connections.SendRequest',
-                'name': 'AskFor',
-                'payload': {
-                    '@type': 'AskForPermissionsConsentRequest',
-                    '@version': '1',
-                    'permissionScope': TIMERS_PERMISSION
-                },
-                token: 'verifier'
+                // <<Not implemented>> [課題1-3] 
+                // ここに consent directive の JSONを作ってください。
             }
         }
         console.log('Permissions found: ' + permissions.consentToken);
@@ -105,8 +113,8 @@ module.exports = {
         console.log('Connections response status + payload: ' + status + ' - ' + JSON.stringify(payload));
 
         return {
-            code: status.code,
-            status: payload.status,
+            code: status.code, // HTTP Status Code。成功すると 200(Success) が設定されます
+            status: payload.status,　// ACCEPTED, DENIED, NOT_ANSWERED のいずれか
             isCardThrown: payload.isCardThrown
         }
     },
@@ -117,9 +125,7 @@ module.exports = {
         const {attributesManager, serviceClientFactory} = handlerInput;
     
         try {
-            /** timerAPIClient を Factory から作る。serviceClientFactory.getTimerManagementServiceClient() */
             const timerServiceClient = serviceClientFactory.getTimerManagementServiceClient();
-            /** timer作る。createTimer 関数*/
             const timerResponse = await timerServiceClient.createTimer(
                 getTimerTemplate(noodle, softy)
             )
@@ -134,7 +140,8 @@ module.exports = {
             sessionAttributes['noodle'] = noodle
             sessionAttributes['softy'] = softy
 
-            /** Timer の作成が成功(timerResponse.status === ON)していたら、 */
+            /** Timer の作成が成功(timerResponse.status === ON)していたら、 timerStatusを保存*/
+            /** * timerStatus の 文字列がレスポンス作成するときのIDになるように設計している */
             if(timerStatus === 'ON') {
                 sessionAttributes['lastTimerStatus'] = timerStatus
                 return sessionAttributes

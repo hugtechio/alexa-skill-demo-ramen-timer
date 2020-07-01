@@ -5,10 +5,10 @@ const s3Adapter = require('ask-sdk-s3-persistence-adapter');
 const talk = require('./talk')
 const timer = require('./timer')
 
-let storage = null
-let session = {}
+let storage = null // persistence attributes
+let session = {} // session attributes
 
-// Synonym で定義したnameをキーとして扱いたいので、slotの構造から直接取る。
+// Synonym で定義したnameをキーとして扱いたいので、slotの構造から直接取る
 function getSynonymValues(handlerInput, key) {
   try{
     const slot = Alexa.getSlot(handlerInput.requestEnvelope, key)
@@ -91,10 +91,22 @@ const LaunchRequest = {
     return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
   },
   async handle(handlerInput) {
-    // Timer を使うには ユーザーの許可が必要。有効になってなければ聞く
-    const directive = timer.verifyConsentToken(handlerInput)
+    // [課題1] ユーザーに Timer APIを許可してもらうよう尋ねる。
+    // 
+    // タイマーAPI を 使うには ユーザーの許可が必要です。
+    // Alexa は Timer 機能がスキルで許可されてない場合にユーザーに尋ねることができます。
+    //
+    // やること
+    // 1) timer.timer.verifyConsentToken(handlerInput) メソッド を呼び出して、Permission があるかどうか確認する
+    // directive が返ってきた場合はタイマーが許可されていません。許可されていれば null が返ります。
+    //
+    // 2) talk.launch(handlerInput.responseBuilder, storage, <<1で取得したdirective>> ) メソッドを呼び出して、
+    // ユーザーに タイマーを許可するか尋ねてください。
+    // 
+    // 3) verifyConsentToken メソッドの中身を編集して、ユーザーに タイマー利用の許可を尋ねるDirectiveを作ってください。
+    const directive = '' // <<Not implemented>> [課題1-1] 
     console.log(directive)
-    if (directive) return talk.launch(handlerInput.responseBuilder, storage, directive)
+    if (directive) return '' //<<Not implemented>> [課題1-2] 
 
     return talk.launch(handlerInput.responseBuilder, storage)
   },
@@ -163,7 +175,6 @@ const SetNoodleTimerIntent = {
       && Alexa.getIntentName(handlerInput.requestEnvelope) === 'SetNoodleTimerIntent'
   },
   async handle(handlerInput) {
-  
     const noodle = getSynonymValues(
       handlerInput, 'noodle'
     )
@@ -175,10 +186,20 @@ const SetNoodleTimerIntent = {
     )
 
     console.log(noodle, softy, minutes)
-    const sessionAttributesOrError = await timer.runTimer(
-      handlerInput, 
-      noodle, (minutes) ? minutes : softy)
+
+    // [課題2] Timer起動
+    // Slot から取り出した noodle, softy, minutes の 値を使って、timerを起動してください。
+    // 
+    // 呼び出す関数は、timer.runTimer(handlerInput, noodle, softy) です。
+    // softy パラメータには、minutes もしくは softy どちらか 取れたほうを指定してください。
+    // runTimer関数の戻り値は 起動したTimerとカップ麺の情報が含まれます。
+    // レスポンスを作るのに使いますので、変数に格納しておいてください。
+    // timer.runTimer は async function です。await おわすれなく。
+    const sessionAttributesOrError = ''// <<Not implemented>> [課題2]
     
+    // [課題3] レスポンス
+    // talk.SetNoodleTimerIntent(responseBuilder, 課題3 で保存した変数) を呼び出して
+    // レスポンスを返却してください。
     return talk.SetNoodleTimerIntent(
       handlerInput.responseBuilder,
       sessionAttributesOrError)
