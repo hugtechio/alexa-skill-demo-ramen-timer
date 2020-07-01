@@ -28,7 +28,7 @@ module.exports = {
         }
         if (Object.keys(storage).length === 0) {
             return response(responseBuilder, {
-                speak: 'こんにちは。カップ麺タイマーです。カップ麺にお湯を入れたら、アレクサ、カップ麺タイマーを起動して、５分ね。と、私を呼び出してください。',
+                speak: 'こんにちは。カップ麺タイマーです。カップ麺にお湯を入れたら、アレクサ、カップ麺タイマーを起動して、５分ね。と、私を呼び出してください。「固め」、「やわらかめ」と言うこともできますよ？',
                 reprompt: 'カップ麺にお湯を入れたら時間を教えてください。',
                 shouldEndSession: false
             })
@@ -102,6 +102,9 @@ module.exports = {
                 }
             },
             'ON': (params) => {
+                if (!isNaN(params.softy)) {
+                    params.softy = `${params.softy}分`
+                }
                 return {
                     speak: `${params.noodle} を ${params.softy} ですね？ できたらお知らせしますね？`,
                     reprompt: ``,

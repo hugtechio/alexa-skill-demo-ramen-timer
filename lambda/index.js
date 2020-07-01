@@ -11,7 +11,13 @@ let session = {}
 // Synonym で定義したidをキーとして扱いたいので、slotの構造から直接取る。
 function getSynonymValues(handlerInput, key) {
   try{
-    return Alexa.getSlot(handlerInput.requestEnvelope, key).resolutions.resolutionsPerAuthority[0].values[0].value.name.toLowerCase()
+    const slot = Alexa.getSlot(handlerInput.requestEnvelope, key)
+    const resolutions = slot.resolutions
+    if (resolutions) {
+      return resolutions.resolutionsPerAuthority[0].values[0].value.name.toLowerCase()
+    } else {
+      return slot.value
+    }
   } catch (e) {
     console.log(e)
     return ''
