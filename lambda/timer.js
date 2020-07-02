@@ -47,7 +47,7 @@ const message = {
 const getTimerTemplate = (noodle, softyOrMinutes) => {
     return {
         duration: getAlexaDuration(noodle, softyOrMinutes),
-        label: message.label(noodle, softyOrMinutes),
+        timerLabel: message.label(noodle, softyOrMinutes),
         creationBehavior: {
             displayExperience: {
                 visibility: 'VISIBLE'
@@ -115,7 +115,7 @@ module.exports = {
      */
     runTimer: async (handlerInput, noodle, softy) => {
         const {attributesManager, serviceClientFactory} = handlerInput;
-    
+        const sessionAttributes = attributesManager.getSessionAttributes(); 
         try {
             /** timerAPIClient を Factory から作る。serviceClientFactory.getTimerManagementServiceClient() */
             const timerServiceClient = serviceClientFactory.getTimerManagementServiceClient();
@@ -129,7 +129,6 @@ module.exports = {
             console.log(timerResponse)
 
             /** 作った Timer の情報を sessionAttributes に保存 */
-            const sessionAttributes = attributesManager.getSessionAttributes();
             sessionAttributes['lastTimerId'] = timerId
             sessionAttributes['noodle'] = noodle
             sessionAttributes['softy'] = softy
